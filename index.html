@@ -1,0 +1,1827 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LUMIS STUDIO — Media Production Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --glass-bg: rgba(255,255,255,0.07);
+    --glass-border: rgba(255,255,255,0.18);
+    --glass-hover: rgba(255,255,255,0.13);
+    --glass-strong: rgba(255,255,255,0.15);
+    --accent: #c8a97e;
+    --accent2: #7ec8c8;
+    --text-primary: rgba(255,255,255,0.95);
+    --text-secondary: rgba(255,255,255,0.6);
+    --text-muted: rgba(255,255,255,0.38);
+    --bg-dark: #0b0c10;
+    --bg-mid: #10121a;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg-dark);
+    color: var(--text-primary);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Background orbs */
+  body::before, body::after {
+    content:'';
+    position:fixed;
+    border-radius:50%;
+    filter:blur(120px);
+    z-index:0;
+    pointer-events:none;
+  }
+  body::before {
+    width:700px; height:700px;
+    background: radial-gradient(circle, rgba(200,169,126,0.18) 0%, transparent 70%);
+    top:-200px; left:-200px;
+  }
+  body::after {
+    width:600px; height:600px;
+    background: radial-gradient(circle, rgba(126,200,200,0.14) 0%, transparent 70%);
+    bottom:-100px; right:-100px;
+  }
+
+  /* Pages */
+  .page { display:none; position:relative; z-index:1; min-height:100vh; }
+  .page.active { display:block; }
+
+  /* NAV */
+  nav {
+    position:fixed; top:0; left:0; right:0; z-index:100;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:0 48px;
+    height:68px;
+    background: rgba(11,12,16,0.7);
+    backdrop-filter: blur(24px) saturate(1.5);
+    -webkit-backdrop-filter: blur(24px) saturate(1.5);
+    border-bottom: 0.5px solid var(--glass-border);
+  }
+  .nav-logo {
+    font-family:'Playfair Display', serif;
+    font-size:22px;
+    letter-spacing:.04em;
+    color: var(--accent);
+    cursor:pointer;
+    text-decoration:none;
+  }
+  .nav-logo span { color: var(--text-primary); }
+  .nav-links {
+    display:flex; gap:4px; list-style:none;
+  }
+  .nav-links li a {
+    display:block;
+    padding:6px 14px;
+    font-size:13px;
+    font-weight:400;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    color: var(--text-secondary);
+    text-decoration:none;
+    border-radius:6px;
+    transition: color .2s, background .2s;
+    cursor:pointer;
+  }
+  .nav-links li a:hover,
+  .nav-links li a.active {
+    color: var(--text-primary);
+    background: var(--glass-bg);
+  }
+  .nav-cta {
+    padding:8px 22px !important;
+    background: var(--glass-strong) !important;
+    border: 0.5px solid var(--glass-border) !important;
+    color: var(--accent) !important;
+    border-radius:30px !important;
+  }
+
+  /* Glass card */
+  .glass {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px) saturate(1.4);
+    -webkit-backdrop-filter: blur(20px) saturate(1.4);
+    border: 0.5px solid var(--glass-border);
+    border-radius:16px;
+  }
+  .glass:hover { background: var(--glass-hover); }
+
+  /* Section padding */
+  .section {
+    padding: 100px 64px 80px;
+    max-width:1280px;
+    margin:0 auto;
+  }
+  .section-sm { padding: 80px 64px 60px; max-width:1280px; margin:0 auto; }
+
+  /* Tags */
+  .tag {
+    display:inline-block;
+    padding:3px 12px;
+    border-radius:20px;
+    font-size:11px;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    font-weight:500;
+    border: 0.5px solid var(--glass-border);
+    color: var(--accent);
+    background: rgba(200,169,126,0.08);
+  }
+
+  /* Eyebrow */
+  .eyebrow {
+    font-size:11px;
+    letter-spacing:.2em;
+    text-transform:uppercase;
+    color: var(--accent2);
+    font-weight:500;
+    margin-bottom:16px;
+  }
+
+  /* Headings */
+  h1.display {
+    font-family:'Playfair Display', serif;
+    font-size:clamp(52px,7vw,88px);
+    font-weight:400;
+    line-height:1.07;
+    letter-spacing:-.02em;
+  }
+  h1.display em { font-style:italic; color: var(--accent); }
+  h2.section-title {
+    font-family:'Playfair Display', serif;
+    font-size:clamp(32px,4vw,48px);
+    font-weight:400;
+    letter-spacing:-.01em;
+    margin-bottom:12px;
+  }
+  h2.section-title em { font-style:italic; color: var(--accent); }
+  h3.card-title { font-size:16px; font-weight:500; margin-bottom:6px; }
+
+  /* Buttons */
+  .btn {
+    display:inline-flex; align-items:center; gap:8px;
+    padding:12px 28px;
+    border-radius:30px;
+    font-size:13px;
+    font-weight:500;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    cursor:pointer;
+    text-decoration:none;
+    transition: all .2s;
+    border:none;
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: #0b0c10;
+  }
+  .btn-primary:hover { opacity:.88; }
+  .btn-ghost {
+    background: var(--glass-bg);
+    border: 0.5px solid var(--glass-border);
+    color: var(--text-primary);
+    backdrop-filter:blur(10px);
+  }
+  .btn-ghost:hover { background: var(--glass-hover); }
+
+  /* Grid helpers */
+  .grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:24px; }
+  .grid-3 { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+  .grid-4 { display:grid; grid-template-columns:repeat(4,1fr); gap:18px; }
+
+  /* Media card */
+  .media-card {
+    position:relative; overflow:hidden; border-radius:14px;
+    cursor:pointer;
+    transition: transform .3s;
+  }
+  .media-card:hover { transform: translateY(-4px); }
+  .media-card .thumb {
+    width:100%; aspect-ratio:16/10;
+    object-fit:cover;
+    display:block;
+  }
+  .media-card .thumb-ph {
+    width:100%; aspect-ratio:16/10;
+    background: var(--glass-strong);
+    display:flex; align-items:center; justify-content:center;
+    font-size:36px;
+    color: var(--text-muted);
+  }
+  .media-card .card-overlay {
+    position:absolute; bottom:0; left:0; right:0;
+    padding:16px;
+    background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 100%);
+  }
+  .media-card .card-overlay h3 { font-size:14px; font-weight:500; }
+  .media-card .card-overlay p { font-size:12px; color: var(--text-secondary); margin-top:2px; }
+  .play-btn {
+    position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+    width:48px; height:48px; border-radius:50%;
+    background: rgba(200,169,126,0.9);
+    display:flex; align-items:center; justify-content:center;
+    font-size:20px; color:#0b0c10;
+    opacity:0; transition: opacity .2s;
+  }
+  .media-card:hover .play-btn { opacity:1; }
+
+  /* Photo grid */
+  .photo-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
+  .photo-item {
+    aspect-ratio:4/3;
+    background: var(--glass-strong);
+    border-radius:10px;
+    overflow:hidden;
+    cursor:pointer;
+    transition:transform .3s;
+    display:flex; align-items:center; justify-content:center;
+    font-size:28px; color: var(--text-muted);
+  }
+  .photo-item:nth-child(4n+1) { aspect-ratio:16/10; grid-column:span 2; }
+  .photo-item:hover { transform:scale(1.02); }
+
+  /* Stat */
+  .stat { text-align:center; }
+  .stat .num {
+    font-family:'Playfair Display',serif;
+    font-size:48px; font-weight:400;
+    color: var(--accent);
+    line-height:1;
+    margin-bottom:6px;
+  }
+  .stat .label { font-size:13px; color: var(--text-secondary); letter-spacing:.08em; text-transform:uppercase; }
+
+  /* Divider */
+  hr.divider { border:none; border-top:0.5px solid var(--glass-border); margin:40px 0; }
+
+  /* Timeline */
+  .timeline { position:relative; padding-left:32px; }
+  .timeline::before {
+    content:''; position:absolute; left:7px; top:0; bottom:0;
+    width:1px; background: var(--glass-border);
+  }
+  .tl-item { position:relative; margin-bottom:36px; }
+  .tl-item::before {
+    content:''; position:absolute; left:-29px; top:4px;
+    width:10px; height:10px; border-radius:50%;
+    background: var(--accent);
+    border:2px solid var(--bg-dark);
+  }
+  .tl-year { font-size:11px; color: var(--accent2); letter-spacing:.12em; text-transform:uppercase; margin-bottom:4px; }
+  .tl-role { font-size:15px; font-weight:500; margin-bottom:2px; }
+  .tl-place { font-size:13px; color: var(--text-secondary); }
+
+  /* Skill bar */
+  .skill-bar { margin-bottom:16px; }
+  .skill-label { display:flex; justify-content:space-between; font-size:13px; margin-bottom:6px; }
+  .skill-label span:last-child { color: var(--accent); }
+  .skill-track { height:3px; background: var(--glass-strong); border-radius:2px; }
+  .skill-fill { height:100%; border-radius:2px; background: linear-gradient(90deg, var(--accent) 0%, var(--accent2) 100%); }
+
+  /* Service card */
+  .service-card { padding:28px; cursor:default; transition:transform .3s; }
+  .service-card:hover { transform:translateY(-4px); }
+  .service-icon { font-size:32px; margin-bottom:16px; }
+  .service-card h3 { font-size:18px; font-weight:500; margin-bottom:10px; }
+  .service-card p { font-size:14px; color: var(--text-secondary); line-height:1.7; }
+  .service-price { margin-top:16px; font-size:13px; color: var(--accent); font-weight:500; }
+
+  /* Album grid */
+  .album-card { padding:0; overflow:hidden; cursor:pointer; transition:transform .3s; }
+  .album-card:hover { transform:translateY(-4px); }
+  .album-cover {
+    aspect-ratio:1/1;
+    display:flex; align-items:center; justify-content:center;
+    font-size:52px;
+    position:relative;
+  }
+  .album-cover-1 { background: linear-gradient(135deg, #1a0a2e, #3d1f6e); }
+  .album-cover-2 { background: linear-gradient(135deg, #0a2a1a, #1a6e3d); }
+  .album-cover-3 { background: linear-gradient(135deg, #2a0a0a, #6e1f1f); }
+  .album-cover-4 { background: linear-gradient(135deg, #0a1a2a, #1f3d6e); }
+  .album-info { padding:14px 16px 18px; }
+  .album-info h3 { font-size:14px; font-weight:500; margin-bottom:4px; }
+  .album-info p { font-size:12px; color: var(--text-secondary); }
+
+  /* Audio player */
+  .audio-track {
+    display:flex; align-items:center; gap:16px;
+    padding:14px 20px;
+    border-radius:12px;
+    margin-bottom:8px;
+    cursor:pointer;
+    transition:background .2s;
+  }
+  .audio-track:hover { background: var(--glass-hover); }
+  .audio-track.playing { background: rgba(200,169,126,0.1); border:0.5px solid rgba(200,169,126,0.25); }
+  .track-num { font-size:13px; color: var(--text-muted); width:24px; text-align:center; }
+  .track-play { width:36px; height:36px; border-radius:50%; background: var(--glass-strong); display:flex; align-items:center; justify-content:center; font-size:14px; }
+  .track-info { flex:1; }
+  .track-info h4 { font-size:14px; font-weight:400; margin-bottom:2px; }
+  .track-info p { font-size:12px; color: var(--text-secondary); }
+  .track-dur { font-size:12px; color: var(--text-muted); }
+
+  /* Artist card */
+  .artist-card { text-align:center; padding:32px 20px; cursor:pointer; transition:transform .3s; }
+  .artist-card:hover { transform:translateY(-4px); }
+  .artist-avatar {
+    width:90px; height:90px; border-radius:50%;
+    margin:0 auto 16px;
+    display:flex; align-items:center; justify-content:center;
+    font-size:36px;
+    border:2px solid var(--glass-border);
+  }
+  .artist-card h3 { font-size:15px; font-weight:500; margin-bottom:4px; }
+  .artist-card p { font-size:12px; color: var(--text-secondary); }
+  .artist-genres { margin-top:10px; display:flex; flex-wrap:wrap; gap:6px; justify-content:center; }
+
+  /* Contact form */
+  .form-group { margin-bottom:20px; }
+  .form-group label { display:block; font-size:12px; letter-spacing:.1em; text-transform:uppercase; color: var(--text-secondary); margin-bottom:8px; }
+  .form-group input, .form-group textarea, .form-group select {
+    width:100%; padding:12px 16px;
+    background: var(--glass-bg);
+    border:0.5px solid var(--glass-border);
+    border-radius:10px;
+    color: var(--text-primary);
+    font-family:'Inter',sans-serif;
+    font-size:14px;
+    outline:none;
+    transition:border-color .2s;
+  }
+  .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+    border-color: rgba(200,169,126,0.5);
+  }
+  .form-group textarea { resize:vertical; min-height:120px; }
+  .form-group select option { background: #10121a; }
+
+  /* Hero */
+  .hero {
+    min-height:100vh;
+    display:flex; flex-direction:column; justify-content:flex-end;
+    padding:0 64px 80px;
+    position:relative;
+    overflow:hidden;
+  }
+  .hero-bg {
+    position:absolute; inset:0;
+    background: linear-gradient(135deg, #0d0f18 0%, #0b0c10 60%, #0f0d18 100%);
+    z-index:0;
+  }
+  .hero-orb1 {
+    position:absolute; width:500px; height:500px; border-radius:50%;
+    background: radial-gradient(circle, rgba(200,169,126,0.2) 0%, transparent 70%);
+    top:5%; right:5%; z-index:0;
+  }
+  .hero-orb2 {
+    position:absolute; width:400px; height:400px; border-radius:50%;
+    background: radial-gradient(circle, rgba(126,200,200,0.15) 0%, transparent 70%);
+    bottom:20%; left:10%; z-index:0;
+  }
+  .hero-content { position:relative; z-index:1; max-width:900px; }
+  .hero-badge {
+    display:inline-flex; align-items:center; gap:8px;
+    padding:6px 16px; border-radius:20px;
+    background: var(--glass-bg);
+    border:0.5px solid var(--glass-border);
+    font-size:11px; letter-spacing:.12em; text-transform:uppercase;
+    color: var(--accent2); margin-bottom:32px;
+    backdrop-filter:blur(10px);
+  }
+  .hero-badge::before { content:'●'; font-size:6px; color: #4cde80; }
+  .hero-desc {
+    font-size:17px;
+    color: var(--text-secondary);
+    line-height:1.7;
+    max-width:560px;
+    margin:24px 0 40px;
+  }
+  .hero-btns { display:flex; gap:14px; flex-wrap:wrap; }
+  .hero-scroll {
+    position:absolute; bottom:32px; right:64px;
+    font-size:11px; letter-spacing:.15em; text-transform:uppercase;
+    color: var(--text-muted); z-index:1;
+    display:flex; align-items:center; gap:8px;
+  }
+  .scroll-line { width:40px; height:0.5px; background: var(--glass-border); }
+
+  /* Floating video reel in hero */
+  .hero-reel {
+    position:absolute; right:64px; top:50%; transform:translateY(-50%);
+    width:380px; aspect-ratio:16/10;
+    border-radius:16px;
+    background: var(--glass-strong);
+    border:0.5px solid var(--glass-border);
+    backdrop-filter:blur(20px);
+    display:flex; align-items:center; justify-content:center;
+    flex-direction:column; gap:12px;
+    z-index:1;
+    overflow:hidden;
+  }
+  .hero-reel::before {
+    content:'▶';
+    font-size:40px; color: var(--accent);
+    opacity:.8;
+  }
+  .hero-reel-label { font-size:12px; color: var(--text-secondary); letter-spacing:.1em; text-transform:uppercase; }
+
+  /* Detail page */
+  .detail-hero {
+    min-height:55vh;
+    display:flex; align-items:flex-end;
+    padding:100px 64px 48px;
+    position:relative;
+    background: var(--glass-bg);
+    border-bottom: 0.5px solid var(--glass-border);
+  }
+  .detail-hero-bg {
+    position:absolute; inset:0;
+    background: linear-gradient(to bottom, rgba(11,12,16,.2), rgba(11,12,16,.95));
+    z-index:0;
+  }
+  .detail-hero-emoji {
+    position:absolute; inset:0;
+    display:flex; align-items:center; justify-content:center;
+    font-size:120px; opacity:.12; z-index:0; user-select:none;
+  }
+  .detail-hero-content { position:relative; z-index:1; }
+  .detail-meta { display:flex; gap:16px; margin-top:16px; }
+  .detail-meta span { font-size:12px; color: var(--text-secondary); }
+
+  /* Back btn */
+  .back-btn {
+    display:inline-flex; align-items:center; gap:8px;
+    font-size:13px; color: var(--text-secondary);
+    cursor:pointer; margin-bottom:24px;
+    text-decoration:none;
+    transition:color .2s;
+  }
+  .back-btn:hover { color: var(--text-primary); }
+
+  /* Footer */
+  footer {
+    border-top: 0.5px solid var(--glass-border);
+    padding:48px 64px 32px;
+    display:flex; justify-content:space-between; align-items:center;
+    flex-wrap:wrap; gap:20px;
+  }
+  footer p { font-size:13px; color: var(--text-muted); }
+
+  /* Team member card */
+  .team-card {
+    border-radius:18px;
+    overflow:hidden;
+    cursor:pointer;
+    transition:transform .3s;
+    position:relative;
+  }
+  .team-card:hover { transform:translateY(-6px); }
+  .team-avatar-wrap {
+    position:relative;
+    aspect-ratio:3/4;
+    display:flex; align-items:center; justify-content:center;
+    overflow:hidden;
+  }
+  .team-avatar-emoji {
+    font-size:80px;
+    z-index:1;
+    position:relative;
+  }
+  .team-avatar-bg {
+    position:absolute; inset:0;
+    opacity:.85;
+  }
+  .team-avatar-overlay {
+    position:absolute; inset:0; z-index:2;
+    background:linear-gradient(to top, rgba(11,12,16,1) 0%, rgba(11,12,16,0.3) 60%, transparent 100%);
+    display:flex; align-items:flex-end; padding:20px;
+    opacity:0; transition:opacity .3s;
+  }
+  .team-card:hover .team-avatar-overlay { opacity:1; }
+  .team-info { padding:20px 20px 24px; }
+  .team-info h3 { font-size:17px; font-weight:500; margin-bottom:4px; }
+  .team-info .role { font-size:13px; color:var(--accent); margin-bottom:8px; font-weight:500; }
+  .team-info p { font-size:13px; color:var(--text-secondary); line-height:1.6; }
+  .team-socials { display:flex; gap:8px; margin-top:12px; }
+  .team-socials a {
+    display:inline-flex; align-items:center; justify-content:center;
+    width:30px; height:30px; border-radius:50%;
+    background:var(--glass-strong);
+    border:0.5px solid var(--glass-border);
+    font-size:12px; color:var(--text-secondary);
+    cursor:pointer; text-decoration:none;
+    transition:background .2s, color .2s;
+  }
+  .team-socials a:hover { background:rgba(200,169,126,0.15); color:var(--accent); }
+
+  /* Collab timeline */
+  .collab-item {
+    display:flex; gap:20px; align-items:flex-start;
+    padding:20px;
+    border-radius:12px;
+    transition:background .2s;
+  }
+  .collab-item:hover { background:var(--glass-hover); }
+  .collab-icon {
+    width:44px; height:44px; border-radius:12px; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center;
+    font-size:22px;
+    background:var(--glass-strong);
+    border:0.5px solid var(--glass-border);
+  }
+
+  /* Responsive */
+  @media(max-width:900px) {
+    nav { padding:0 24px; }
+    .nav-links { display:none; }
+    .section, .section-sm { padding:100px 24px 60px; }
+    .hero { padding:0 24px 60px; }
+    .hero-reel { display:none; }
+    .grid-2, .grid-3, .grid-4 { grid-template-columns:1fr; }
+    .photo-grid { grid-template-columns:1fr 1fr; }
+    .photo-item:nth-child(4n+1) { grid-column:span 1; aspect-ratio:4/3; }
+    footer { padding:40px 24px 24px; flex-direction:column; align-items:flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" onclick="goTo('home')">LUMIS<span>STUDIO</span></a>
+  <ul class="nav-links">
+    <li><a onclick="goTo('home')" data-page="home">Home</a></li>
+    <li><a onclick="goTo('about')" data-page="about">About</a></li>
+    <li><a onclick="goTo('resume')" data-page="resume">Resume</a></li>
+    <li><a onclick="goTo('services')" data-page="services">Services</a></li>
+    <li><a onclick="goTo('photos')" data-page="photos">Photos</a></li>
+    <li><a onclick="goTo('videos')" data-page="videos">Video</a></li>
+    <li><a onclick="goTo('album')" data-page="album">Album</a></li>
+    <li><a onclick="goTo('audio')" data-page="audio">Audio</a></li>
+    <li><a onclick="goTo('artists')" data-page="artists">Artists</a></li>
+    <li><a onclick="goTo('team')" data-page="team">Team</a></li>
+    <li><a onclick="goTo('contact')" data-page="contact" class="nav-cta">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- ═══ HOME PAGE ═══ -->
+<div id="page-home" class="page active">
+  <div class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-orb1"></div>
+    <div class="hero-orb2"></div>
+    <div class="hero-reel">
+      <div class="hero-reel-label">Showreel 2025</div>
+    </div>
+    <div class="hero-content">
+      <div class="hero-badge">Available for Projects</div>
+      <h1 class="display">We craft <em>stories</em><br>through light &amp; sound</h1>
+      <p class="hero-desc">Award-winning media production studio specialising in cinematic video, commercial photography, and original music composition.</p>
+      <div class="hero-btns">
+        <button class="btn btn-primary" onclick="goTo('videos')">▶ Watch Showreel</button>
+        <button class="btn btn-ghost" onclick="goTo('contact')">Get in Touch</button>
+      </div>
+    </div>
+    <div class="hero-scroll">Scroll to explore <div class="scroll-line"></div></div>
+  </div>
+
+  <!-- Stats -->
+  <div class="section" style="padding-top:80px;">
+    <div class="glass" style="padding:48px; display:grid; grid-template-columns:repeat(4,1fr); gap:20px;">
+      <div class="stat"><div class="num">12+</div><div class="label">Years Active</div></div>
+      <div class="stat"><div class="num">340</div><div class="label">Projects Delivered</div></div>
+      <div class="stat"><div class="num">86</div><div class="label">Artists Worked With</div></div>
+      <div class="stat"><div class="num">24</div><div class="label">Awards Won</div></div>
+    </div>
+  </div>
+
+  <!-- Featured Work -->
+  <div class="section" style="padding-top:40px;">
+    <div class="eyebrow">Featured Work</div>
+    <h2 class="section-title">Recent <em>Productions</em></h2>
+    <p style="font-size:15px;color:var(--text-secondary);margin-bottom:40px;max-width:500px;">From concept to final delivery — explore our latest creative output across all media formats.</p>
+    <div class="grid-3">
+      <div class="media-card glass" onclick="goTo('photo-detail','Cinematic Landscapes')">
+        <div class="thumb-ph">🏔️</div>
+        <div class="card-overlay"><h3>Cinematic Landscapes</h3><p>Photography · 2025</p></div>
+      </div>
+      <div class="media-card glass" onclick="goTo('video-detail','Urban Pulse')">
+        <div class="thumb-ph">🏙️</div>
+        <div class="play-btn">▶</div>
+        <div class="card-overlay"><h3>Urban Pulse</h3><p>Documentary · 2025</p></div>
+      </div>
+      <div class="media-card glass" onclick="goTo('album')">
+        <div class="thumb-ph">🎵</div>
+        <div class="card-overlay"><h3>Neon Echoes</h3><p>Album · Electronic</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Services preview -->
+  <div class="section" style="padding-top:40px;">
+    <div class="eyebrow">What We Do</div>
+    <h2 class="section-title">Core <em>Services</em></h2>
+    <div class="grid-4" style="margin-top:32px;">
+      <div class="glass service-card">
+        <div class="service-icon">🎬</div>
+        <h3>Video Production</h3>
+        <p style="font-size:13px;color:var(--text-secondary);">Cinematic storytelling from concept to final cut.</p>
+      </div>
+      <div class="glass service-card">
+        <div class="service-icon">📸</div>
+        <h3>Photography</h3>
+        <p style="font-size:13px;color:var(--text-secondary);">Commercial, editorial, and fine-art photography.</p>
+      </div>
+      <div class="glass service-card">
+        <div class="service-icon">🎵</div>
+        <h3>Music Production</h3>
+        <p style="font-size:13px;color:var(--text-secondary);">Original scores, mixing, and mastering.</p>
+      </div>
+      <div class="glass service-card">
+        <div class="service-icon">🎙️</div>
+        <h3>Audio Engineering</h3>
+        <p style="font-size:13px;color:var(--text-secondary);">Studio recording and post-production sound.</p>
+      </div>
+    </div>
+    <div style="margin-top:28px;">
+      <button class="btn btn-ghost" onclick="goTo('services')">View All Services →</button>
+    </div>
+  </div>
+
+  <!-- Team preview -->
+  <div class="section" style="padding-top:40px;">
+    <div class="eyebrow">The Collective</div>
+    <h2 class="section-title">Our <em>Team</em></h2>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:32px;">
+      <div class="glass" style="padding:20px;text-align:center;border-radius:14px;cursor:pointer;transition:transform .3s;" onclick="goTo('team')" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform=''">
+        <div style="font-size:36px;margin-bottom:10px;">🎬</div>
+        <div style="font-size:14px;font-weight:500;">Marcus Veil</div>
+        <div style="font-size:12px;color:var(--accent);margin-top:3px;">Director</div>
+      </div>
+      <div class="glass" style="padding:20px;text-align:center;border-radius:14px;cursor:pointer;transition:transform .3s;" onclick="goTo('team')" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform=''">
+        <div style="font-size:36px;margin-bottom:10px;">📸</div>
+        <div style="font-size:14px;font-weight:500;">Suki Tanaka</div>
+        <div style="font-size:12px;color:var(--accent);margin-top:3px;">Photographer</div>
+      </div>
+      <div class="glass" style="padding:20px;text-align:center;border-radius:14px;cursor:pointer;transition:transform .3s;" onclick="goTo('team')" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform=''">
+        <div style="font-size:36px;margin-bottom:10px;">🎵</div>
+        <div style="font-size:14px;font-weight:500;">Damien Osei</div>
+        <div style="font-size:12px;color:var(--accent);margin-top:3px;">Music Producer</div>
+      </div>
+      <div class="glass" style="padding:20px;text-align:center;border-radius:14px;cursor:pointer;transition:transform .3s;" onclick="goTo('team')" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform=''">
+        <div style="font-size:36px;margin-bottom:10px;">🎨</div>
+        <div style="font-size:14px;font-weight:500;">Léa Moreau</div>
+        <div style="font-size:12px;color:var(--accent);margin-top:3px;">Creative Director</div>
+      </div>
+    </div>
+    <div style="margin-top:24px;">
+      <button class="btn btn-ghost" onclick="goTo('team')">Meet the Full Team →</button>
+    </div>
+  </div>
+
+  <footer>
+    <div>
+      <div style="font-family:'Playfair Display',serif;font-size:20px;color:var(--accent);margin-bottom:6px;">LUMIS<span style="color:var(--text-primary)">STUDIO</span></div>
+      <p>Creating with purpose since 2013</p>
+    </div>
+    <div style="display:flex;gap:24px;">
+      <a onclick="goTo('about')" style="font-size:13px;color:var(--text-muted);cursor:pointer;">About</a>
+      <a onclick="goTo('services')" style="font-size:13px;color:var(--text-muted);cursor:pointer;">Services</a>
+      <a onclick="goTo('contact')" style="font-size:13px;color:var(--text-muted);cursor:pointer;">Contact</a>
+    </div>
+    <p>© 2025 Lumis Studio. All rights reserved.</p>
+  </footer>
+</div>
+
+<!-- ═══ ABOUT PAGE ═══ -->
+<div id="page-about" class="page">
+  <div class="section">
+    <a class="back-btn" onclick="goTo('home')">← Back to Home</a>
+    <div class="eyebrow">About the Studio</div>
+    <h2 class="section-title">The <em>Story</em> Behind the Lens</h2>
+    <div class="grid-2" style="margin-top:48px;gap:48px;align-items:start;">
+      <div>
+        <div class="glass" style="aspect-ratio:3/4;display:flex;align-items:center;justify-content:center;font-size:100px;border-radius:20px;overflow:hidden;">🎬</div>
+      </div>
+      <div>
+        <p style="font-size:16px;line-height:1.8;color:var(--text-secondary);margin-bottom:24px;">Lumis Studio was founded in 2013 by Marcus Veil — a cinematographer with a background in documentary film and electronic music composition. What began as a one-camera operation in a converted warehouse has grown into a full-service media production house serving brands, musicians, and storytellers worldwide.</p>
+        <p style="font-size:15px;line-height:1.8;color:var(--text-secondary);margin-bottom:32px;">We believe that every frame, every note, and every photograph is an opportunity to communicate something that words alone cannot. Our work spans commercial advertising, independent documentary, editorial photography, and original music — all unified by a commitment to intentional craft.</p>
+        <div class="grid-2" style="gap:16px;margin-bottom:32px;">
+          <div class="glass" style="padding:20px;">
+            <div style="font-size:28px;font-family:'Playfair Display',serif;color:var(--accent);">12+</div>
+            <div style="font-size:13px;color:var(--text-secondary);margin-top:4px;">Years of Experience</div>
+          </div>
+          <div class="glass" style="padding:20px;">
+            <div style="font-size:28px;font-family:'Playfair Display',serif;color:var(--accent);">3</div>
+            <div style="font-size:13px;color:var(--text-secondary);margin-top:4px;">Continents Worked</div>
+          </div>
+        </div>
+        <button class="btn btn-primary" onclick="goTo('contact')">Work With Us</button>
+      </div>
+    </div>
+
+    <hr class="divider" style="margin-top:60px;">
+
+    <div class="eyebrow" style="margin-top:48px;">Core Values</div>
+    <h2 class="section-title" style="margin-bottom:32px;">How we <em>work</em></h2>
+    <div class="grid-3">
+      <div class="glass" style="padding:28px;">
+        <div style="font-size:32px;margin-bottom:14px;">✦</div>
+        <h3 style="font-size:16px;font-weight:500;margin-bottom:10px;">Craft First</h3>
+        <p style="font-size:14px;color:var(--text-secondary);line-height:1.7;">Every decision — from lens choice to mix level — is made with intention. We don't cut corners on quality.</p>
+      </div>
+      <div class="glass" style="padding:28px;">
+        <div style="font-size:32px;margin-bottom:14px;">◈</div>
+        <h3 style="font-size:16px;font-weight:500;margin-bottom:10px;">Collaborative Spirit</h3>
+        <p style="font-size:14px;color:var(--text-secondary);line-height:1.7;">Your vision is the blueprint. We bring the technical expertise and creative instinct to realise it fully.</p>
+      </div>
+      <div class="glass" style="padding:28px;">
+        <div style="font-size:32px;margin-bottom:14px;">◉</div>
+        <h3 style="font-size:16px;font-weight:500;margin-bottom:10px;">Stories That Matter</h3>
+        <p style="font-size:14px;color:var(--text-secondary);line-height:1.7;">We gravitate toward work with cultural resonance — projects that outlast the trend cycle.</p>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2025 Lumis Studio</p>
+    <button class="btn btn-ghost" onclick="goTo('contact')">Start a Project →</button>
+  </footer>
+</div>
+
+<!-- ═══ RESUME PAGE ═══ -->
+<div id="page-resume" class="page">
+  <div class="section">
+    <a class="back-btn" onclick="goTo('home')">← Back</a>
+    <div class="eyebrow">Curriculum Vitae</div>
+    <h2 class="section-title"><em>Experience</em> &amp; Skills</h2>
+
+    <div class="grid-2" style="margin-top:48px;gap:48px;align-items:start;">
+      <div>
+        <h3 style="font-size:14px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent2);margin-bottom:24px;">Career Timeline</h3>
+        <div class="timeline">
+          <div class="tl-item">
+            <div class="tl-year">2020 — Present</div>
+            <div class="tl-role">Founder &amp; Creative Director</div>
+            <div class="tl-place">Lumis Studio, Phnom Penh</div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-year">2017 — 2020</div>
+            <div class="tl-role">Senior Cinematographer</div>
+            <div class="tl-place">Refract Films, Singapore</div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-year">2015 — 2017</div>
+            <div class="tl-role">Music Producer &amp; Sound Designer</div>
+            <div class="tl-place">Frequency Records, Bangkok</div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-year">2013 — 2015</div>
+            <div class="tl-role">Director of Photography</div>
+            <div class="tl-place">Independent Projects, Worldwide</div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-year">2011 — 2013</div>
+            <div class="tl-role">BFA Film &amp; Media Arts</div>
+            <div class="tl-place">Parsons School of Design, New York</div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <h3 style="font-size:14px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent2);margin-bottom:24px;">Technical Skills</h3>
+        <div class="skill-bar"><div class="skill-label"><span>Cinematography</span><span>97%</span></div><div class="skill-track"><div class="skill-fill" style="width:97%"></div></div></div>
+        <div class="skill-bar"><div class="skill-label"><span>Photo Editing</span><span>93%</span></div><div class="skill-track"><div class="skill-fill" style="width:93%"></div></div></div>
+        <div class="skill-bar"><div class="skill-label"><span>Music Production</span><span>90%</span></div><div class="skill-track"><div class="skill-fill" style="width:90%"></div></div></div>
+        <div class="skill-bar"><div class="skill-label"><span>Video Editing</span><span>95%</span></div><div class="skill-track"><div class="skill-fill" style="width:95%"></div></div></div>
+        <div class="skill-bar"><div class="skill-label"><span>Sound Design</span><span>88%</span></div><div class="skill-track"><div class="skill-fill" style="width:88%"></div></div></div>
+        <div class="skill-bar"><div class="skill-label"><span>Color Grading</span><span>92%</span></div><div class="skill-track"><div class="skill-fill" style="width:92%"></div></div></div>
+
+        <hr class="divider">
+        <h3 style="font-size:14px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent2);margin-bottom:20px;">Tools &amp; Software</h3>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;">
+          <span class="tag">Adobe Premiere</span>
+          <span class="tag">DaVinci Resolve</span>
+          <span class="tag">After Effects</span>
+          <span class="tag">Lightroom</span>
+          <span class="tag">Photoshop</span>
+          <span class="tag">Ableton Live</span>
+          <span class="tag">Logic Pro X</span>
+          <span class="tag">Pro Tools</span>
+          <span class="tag">Final Cut Pro</span>
+          <span class="tag">Cinema 4D</span>
+        </div>
+
+        <hr class="divider">
+        <h3 style="font-size:14px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent2);margin-bottom:20px;">Awards &amp; Recognition</h3>
+        <div class="tl-item" style="margin-bottom:14px;padding-left:14px;border-left:2px solid rgba(200,169,126,.3);">
+          <div class="tl-year">2024</div>
+          <div class="tl-role" style="font-size:13px;">Best Documentary — Asia Pacific Film Awards</div>
+        </div>
+        <div class="tl-item" style="margin-bottom:14px;padding-left:14px;border-left:2px solid rgba(200,169,126,.3);">
+          <div class="tl-year">2023</div>
+          <div class="tl-role" style="font-size:13px;">Silver Cannes Lion — Audio Brand Identity</div>
+        </div>
+        <div class="tl-item" style="padding-left:14px;border-left:2px solid rgba(200,169,126,.3);">
+          <div class="tl-year">2022</div>
+          <div class="tl-role" style="font-size:13px;">Best Cinematography — Southeast Asia Shorts</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:40px;text-align:center;">
+      <button class="btn btn-primary">Download CV (PDF)</button>
+    </div>
+  </div>
+  <footer><p>© 2025 Lumis Studio</p></footer>
+</div>
+
+<!-- ═══ SERVICES PAGE ═══ -->
+<div id="page-services" class="page">
+  <div class="section">
+    <a class="back-btn" onclick="goTo('home')">← Back</a>
+    <div class="eyebrow">What We Offer</div>
+    <h2 class="section-title">Our <em>Services</em></h2>
+    <p style="font-size:15px;color:var(--text-secondary);max-width:520px;line-height:1.7;margin-bottom:48px;">Every project is unique. We offer flexible packages built around your creative and commercial goals.</p>
+
+    <div class="grid-3" style="gap:20px;">
+      <div class="glass service-card">
+        <div class="service-icon">🎬</div>
+        <h3>Video Production</h3>
+        <p>Full-service filmmaking: pre-production, principal photography, editing, colour grading, and delivery. Documentary, commercial, music video, and narrative short.</p>
+        <div class="service-price">From $2,500 / project</div>
+      </div>
+      <div class="glass service-card">
+        <div class="service-icon">📸</div>
+        <h3>Photography</h3>
+        <p>Commercial product, editorial portrait, architectural, and fine-art landscape. Studio and on-location. Retouching and print-ready delivery included.</p>
+        <div class="service-price">From $800 / session</div>
+      </div>
+      <div class="glass service-card">
+        <div class="service-icon">🎵</div>
+        <h3>Music Production</h3>
+        <p>Original compositions, beat production, arrangement, mixing, and mastering. All genres. Sync licensing and publishing administration available.</p>
+        <div class="service-price">From $1,200 / track</div>
+      </div>
+      <div class="glass service-card">
+        <div class="service-icon">🎙️</div>
+        <h3>Audio Engineering</h3>
+        <p>Professional studio recording for vocals, live instruments, and podcast. Noise reduction, restoration, ADR, and broadcast-ready final mixes.</p>
+        <div class="service-price">From $150 / hour</div>
+      </div>
+      <div class="glass service-card">
+        <div class="service-icon">🎨</div>
+        <h3>Visual Direction</h3>
+        <p>Creative direction and visual identity for brand campaigns. Mood-boarding, set design, art direction, and brand book development.</p>
+        <div class="service-price">From $3,500 / campaign</div>
+      </div>
+      <div class="glass service-card">
+        <div class="service-icon">📡</div>
+        <h3>Live Streaming</h3>
+        <p>Multi-camera live event production for concerts, conferences, and product launches. Broadcast-quality stream with real-time graphics overlay.</p>
+        <div class="service-price">From $1,800 / event</div>
+      </div>
+    </div>
+
+    <div class="glass" style="padding:40px;margin-top:48px;text-align:center;">
+      <div style="font-family:'Playfair Display',serif;font-size:28px;margin-bottom:12px;">Need something <em style="color:var(--accent)">custom?</em></div>
+      <p style="color:var(--text-secondary);font-size:15px;margin-bottom:24px;">Every great project starts with a conversation. Let's talk about what you're building.</p>
+      <button class="btn btn-primary" onclick="goTo('contact')">Schedule a Free Consultation</button>
+    </div>
+  </div>
+  <footer><p>© 2025 Lumis Studio</p></footer>
+</div>
+
+<!-- ═══ PHOTOS PAGE ═══ -->
+<div id="page-photos" class="page">
+  <div class="section">
+    <a class="back-btn" onclick="goTo('home')">← Back</a>
+    <div class="eyebrow">Photography Portfolio</div>
+    <h2 class="section-title">Visual <em>Stories</em></h2>
+    <div style="display:flex;gap:10px;margin:24px 0 36px;flex-wrap:wrap;">
+      <button class="btn btn-ghost" style="padding:7px 18px;font-size:12px;" onclick="filterPhotos('all')">All</button>
+      <button class="btn btn-ghost" style="padding:7px 18px;font-size:12px;" onclick="filterPhotos('landscape')">Landscape</button>
+      <button class="btn btn-ghost" style="padding:7px 18px;font-size:12px;" onclick="filterPhotos('portrait')">Portrait</button>
+      <button class="btn btn-ghost" style="padding:7px 18px;font-size:12px;" onclick="filterPhotos('commercial')">Commercial</button>
+      <button class="btn btn-ghost" style="padding:7px 18px;font-size:12px;" onclick="filterPhotos('event')">Event</button>
+    </div>
+
+    <div class="photo-grid" id="photo-grid">
+      <div class="photo-item" onclick="goTo('photo-detail','Mountain Solitude')">🏔️</div>
+      <div class="photo-item" onclick="goTo('photo-detail','Golden Hour')">🌅</div>
+      <div class="photo-item" onclick="goTo('photo-detail','Urban Geometry')">🏙️</div>
+      <div class="photo-item" onclick="goTo('photo-detail','Forest Mist')">🌲</div>
+      <div class="photo-item" onclick="goTo('photo-detail','Portrait Study I')">👤</div>
+      <div class="photo-item" onclick="goTo('photo-detail','Product Aura')">📦</div>
+      <div class="photo-item" onclick="goTo('photo-detail','Night Market')">🏮</div>
+      <div class="photo-item" onclick="goTo('photo-detail','Coastal Light')">🌊</div>
+      <div class="photo-item" onclick="goTo('photo-detail','Studio Session')">🎸</div>
+    </div>
+  </div>
+  <footer><p>© 2025 Lumis Studio</p></footer>
+</div>
+
+<!-- ═══ PHOTO DETAIL PAGE ═══ -->
+<div id="page-photo-detail" class="page">
+  <div class="detail-hero">
+    <div class="detail-hero-bg"></div>
+    <div class="detail-hero-emoji" id="photo-detail-emoji">🏔️</div>
+    <div class="detail-hero-content">
+      <a class="back-btn" onclick="goTo('photos')">← Back to Photos</a>
+      <h1 id="photo-detail-title" style="font-family:'Playfair Display',serif;font-size:48px;font-weight:400;"></h1>
+      <div class="detail-meta">
+        <span class="tag">Photography</span>
+        <span>2025</span>
+        <span>Lumis Studio</span>
+      </div>
+    </div>
+  </div>
+  <div class="section" style="padding-top:48px;">
+    <div class="grid-2" style="gap:32px;align-items:start;">
+      <div>
+        <p style="font-size:15px;line-height:1.8;color:var(--text-secondary);margin-bottom:24px;">A study in light, shadow, and natural form. This image was captured during a dawn expedition, using only available light to preserve the raw atmosphere of the location. The final edit employs a restrained grade that honours the tonal range of the original scene.</p>
+        <p style="font-size:15px;line-height:1.8;color:var(--text-secondary);">Shot on Phase One IQ4 150MP. Printed in limited edition on Hahnemühle Photo Rag Ultra Smooth 305gsm.</p>
+        <hr class="divider">
+        <div class="grid-2" style="gap:16px;">
+          <div><div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px;">Camera</div><div style="font-size:14px;">Phase One IQ4</div></div>
+          <div><div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px;">Lens</div><div style="font-size:14px;">80mm f/2.8</div></div>
+          <div><div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px;">ISO</div><div style="font-size:14px;">50</div></div>
+          <div><div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px;">Shutter</div><div style="font-size:14px;">1/250s</div></div>
+        </div>
+        <hr class="divider">
+        <button class="btn btn-primary" onclick="goTo('contact')">Inquire About Print</button>
+      </div>
+      <div class="grid-2" style="gap:10px;">
+        <div class="photo-item" style="aspect-ratio:1/1;font-size:40px;" onclick="goTo('photo-detail','Golden Hour')">🌅</div>
+        <div class="photo-item" style="aspect-ratio:1/1;font-size:40px;" onclick="goTo('photo-detail','Forest Mist')">🌲</div>
+        <div class="photo-item" style="aspect-ratio:1/1;font-size:40px;" onclick="goTo('photo-detail','Coastal Light')">🌊</div>
+        <div class="photo-item" style="aspect-ratio:1/1;font-size:40px;" onclick="goTo('photo-detail','Urban Geometry')">🏙️</div>
+      </div>
+    </div>
+  </div>
+  <footer><p>© 2025 Lumis Studio</p></footer>
+</div>
+
+<!-- ═══ VIDEOS PAGE ═══ -->
+<div id="page-videos" class="page">
+  <div class="section">
+    <a class="back-btn" onclick="goTo('home')">← Back</a>
+    <div class="eyebrow">Video Portfolio</div>
+    <h2 class="section-title">Films &amp; <em>Productions</em></h2>
+    <div style="display:flex;gap:10px;margin:24px 0 36px;flex-wrap:wrap;">
+      <button class="btn btn-ghost" style="padding:7px 18px;font-size:12px;">All</button>
+      <button class="btn btn-ghost" style="padding:7px 18px;font-size:12px;">Documentary</button>
+      <button class="btn btn-ghost" style="padding:7px 18px;font-size:12px;">Commercial</button>
+      <button class="btn btn-ghost" style="padding:7px 18px;font-size:12px;">Music Video</button>
+      <button class="btn btn-ghost" style="padding:7px 18px;font-size:12px;">Short Film</button>
+    </div>
+    <div class="grid-2" style="gap:20px;">
+      <div class="media-card glass" onclick="goTo('video-detail','Urban Pulse')">
+        <div class="thumb-ph" style="font-size:60px;">🏙️</div>
+        <div class="play-btn">▶</div>
+        <div class="card-overlay"><h3>Urban Pulse</h3><p>Documentary · 24 min · 2025</p></div>
+      </div>
+      <div class="media-card glass" onclick="goTo('video-detail','Resonance')">
+        <div class="thumb-ph" style="font-size:60px;">🎵</div>
+        <div class="play-btn">▶</div>
+        <div class="card-overlay"><h3>Resonance</h3><p>Music Video · 4:32 · 2024</p></div>
+      </div>
+      <div class="media-card glass" onclick="goTo('video-detail','Invisible Hours')">
+        <div class="thumb-ph" style="font-size:60px;">⌛</div>
+        <div class="play-btn">▶</div>
+        <div class="card-overlay"><h3>Invisible Hours</h3><p>Short Film · 18 min · 2024</p></div>
+      </div>
+      <div class="media-card glass" onclick="goTo('video-detail','Earth & Air')">
+        <div class="thumb-ph" style="font-size:60px;">🌍</div>
+        <div class="play-btn">▶</div>
+        <div class="card-overlay"><h3>Earth &amp; Air</h3><p>Commercial · 60 sec · 2023</p></div>
+      </div>
+    </div>
+  </div>
+  <footer><p>© 2025 Lumis Studio</p></footer>
+</div>
+
+<!-- ═══ VIDEO DETAIL PAGE ═══ -->
+<div id="page-video-detail" class="page">
+  <div class="section">
+    <a class="back-btn" onclick="goTo('videos')">← Back to Videos</a>
+    <div class="glass" style="border-radius:20px;overflow:hidden;margin-bottom:40px;">
+      <div style="aspect-ratio:16/9;background:linear-gradient(135deg,#0d0f18,#1a1030);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;">
+        <div id="video-detail-emoji" style="font-size:80px;">🏙️</div>
+        <div style="width:72px;height:72px;border-radius:50%;background:rgba(200,169,126,0.2);border:2px solid var(--accent);display:flex;align-items:center;justify-content:center;font-size:28px;cursor:pointer;">▶</div>
+        <div style="font-size:13px;color:var(--text-secondary);letter-spacing:.1em;">Click to play</div>
+      </div>
+    </div>
+    <div class="grid-2" style="gap:48px;align-items:start;">
+      <div>
+        <div class="eyebrow">Now Playing</div>
+        <h1 id="video-detail-title" style="font-family:'Playfair Display',serif;font-size:40px;font-weight:400;margin-bottom:12px;"></h1>
+        <div style="display:flex;gap:12px;margin-bottom:24px;flex-wrap:wrap;">
+          <span class="tag">Documentary</span>
+          <span style="font-size:13px;color:var(--text-secondary);">2025</span>
+          <span style="font-size:13px;color:var(--text-secondary);">24 min</span>
+        </div>
+        <p style="font-size:15px;line-height:1.8;color:var(--text-secondary);">An immersive portrait of the city as a living organism — its rhythms, its silences, and the people who give it pulse. Filmed across 18 months in six neighbourhoods, Urban Pulse explores how urban identity forms in the space between architecture and human movement.</p>
+      </div>
+      <div>
+        <div class="glass" style="padding:24px;">
+          <h3 style="font-size:14px;font-weight:500;margin-bottom:20px;color:var(--text-secondary);letter-spacing:.1em;text-transform:uppercase;">Production Info</h3>
+          <div style="display:grid;gap:14px;">
+            <div style="display:flex;justify-content:space-between;border-bottom:0.5px solid var(--glass-border);padding-bottom:12px;"><span style="font-size:13px;color:var(--text-muted);">Director</span><span style="font-size:13px;">Marcus Veil</span></div>
+            <div style="display:flex;justify-content:space-between;border-bottom:0.5px solid var(--glass-border);padding-bottom:12px;"><span style="font-size:13px;color:var(--text-muted);">Cinematography</span><span style="font-size:13px;">Lumis Studio</span></div>
+            <div style="display:flex;justify-content:space-between;border-bottom:0.5px solid var(--glass-border);padding-bottom:12px;"><span style="font-size:13px;color:var(--text-muted);">Music</span><span style="font-size:13px;">Original Score</span></div>
+            <div style="display:flex;justify-content:space-between;border-bottom:0.5px solid var(--glass-border);padding-bottom:12px;"><span style="font-size:13px;color:var(--text-muted);">Format</span><span style="font-size:13px;">4K DCI / HDR</span></div>
+            <div style="display:flex;justify-content:space-between;"><span style="font-size:13px;color:var(--text-muted);">Camera</span><span style="font-size:13px;">ARRI ALEXA 35</span></div>
+          </div>
+          <hr class="divider" style="margin:20px 0;">
+          <button class="btn btn-primary" style="width:100%;justify-content:center;" onclick="goTo('contact')">License This Film</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <footer><p>© 2025 Lumis Studio</p></footer>
+</div>
+
+<!-- ═══ ALBUM PAGE ═══ -->
+<div id="page-album" class="page">
+  <div class="section">
+    <a class="back-btn" onclick="goTo('home')">← Back</a>
+    <div class="eyebrow">Discography</div>
+    <h2 class="section-title">Music <em>Albums</em></h2>
+    <div class="grid-4" style="margin-top:40px;">
+      <div class="glass album-card" onclick="goTo('audio')">
+        <div class="album-cover album-cover-1">🌌</div>
+        <div class="album-info">
+          <h3>Neon Echoes</h3>
+          <p>Electronic · 2024 · 12 tracks</p>
+        </div>
+      </div>
+      <div class="glass album-card" onclick="goTo('audio')">
+        <div class="album-cover album-cover-2">🌿</div>
+        <div class="album-info">
+          <h3>Canopy</h3>
+          <p>Ambient · 2023 · 8 tracks</p>
+        </div>
+      </div>
+      <div class="glass album-card" onclick="goTo('audio')">
+        <div class="album-cover album-cover-3">🔥</div>
+        <div class="album-info">
+          <h3>Ember Sessions</h3>
+          <p>Jazz Fusion · 2023 · 10 tracks</p>
+        </div>
+      </div>
+      <div class="glass album-card" onclick="goTo('audio')">
+        <div class="album-cover album-cover-4">🌊</div>
+        <div class="album-info">
+          <h3>Depth & Tide</h3>
+          <p>Cinematic · 2022 · 14 tracks</p>
+        </div>
+      </div>
+      <div class="glass album-card" onclick="goTo('audio')">
+        <div class="album-cover" style="background:linear-gradient(135deg,#1a1a0a,#6e6e1f)">🌙</div>
+        <div class="album-info">
+          <h3>Midnight Garden</h3>
+          <p>Lo-fi · 2022 · 9 tracks</p>
+        </div>
+      </div>
+      <div class="glass album-card" onclick="goTo('audio')">
+        <div class="album-cover" style="background:linear-gradient(135deg,#1a0a1a,#6e1f6e)">✨</div>
+        <div class="album-info">
+          <h3>Stellar Drift</h3>
+          <p>Electronic · 2021 · 11 tracks</p>
+        </div>
+      </div>
+      <div class="glass album-card" onclick="goTo('audio')">
+        <div class="album-cover" style="background:linear-gradient(135deg,#0a1a1a,#1f6e6e)">🪐</div>
+        <div class="album-info">
+          <h3>Orbit</h3>
+          <p>Synthwave · 2021 · 10 tracks</p>
+        </div>
+      </div>
+      <div class="glass album-card" onclick="goTo('audio')">
+        <div class="album-cover" style="background:linear-gradient(135deg,#1a0a0a,#6e3f1f)">🎹</div>
+        <div class="album-info">
+          <h3>Piano Sketches</h3>
+          <p>Classical · 2020 · 16 tracks</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <footer><p>© 2025 Lumis Studio</p></footer>
+</div>
+
+<!-- ═══ AUDIO PAGE ═══ -->
+<div id="page-audio" class="page">
+  <div class="section">
+    <a class="back-btn" onclick="goTo('album')">← Back to Albums</a>
+    <div class="eyebrow">Now Playing</div>
+    <h2 class="section-title"><em>Neon Echoes</em></h2>
+    <p style="color:var(--text-secondary);font-size:14px;margin-bottom:40px;">Electronic · 2024 · 12 Tracks · Lumis Studio</p>
+
+    <!-- Mini player -->
+    <div class="glass" style="padding:24px;border-radius:16px;margin-bottom:32px;display:flex;align-items:center;gap:24px;">
+      <div style="width:70px;height:70px;border-radius:12px;background:linear-gradient(135deg,#1a0a2e,#3d1f6e);display:flex;align-items:center;justify-content:center;font-size:32px;flex-shrink:0;">🌌</div>
+      <div style="flex:1;">
+        <div style="font-size:15px;font-weight:500;margin-bottom:4px;" id="now-playing-title">Neon Threshold</div>
+        <div style="font-size:13px;color:var(--text-secondary);">Lumis Studio · Neon Echoes</div>
+        <div style="margin-top:12px;background:var(--glass-strong);height:3px;border-radius:2px;position:relative;">
+          <div style="width:38%;height:100%;background:var(--accent);border-radius:2px;"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text-muted);margin-top:4px;"><span>1:48</span><span>4:22</span></div>
+      </div>
+      <div style="display:flex;gap:14px;align-items:center;">
+        <button style="background:none;border:none;color:var(--text-secondary);font-size:18px;cursor:pointer;">⏮</button>
+        <button style="width:44px;height:44px;border-radius:50%;background:var(--accent);border:none;color:#0b0c10;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;" id="play-pause-btn" onclick="togglePlay()">⏸</button>
+        <button style="background:none;border:none;color:var(--text-secondary);font-size:18px;cursor:pointer;">⏭</button>
+      </div>
+    </div>
+
+    <!-- Track list -->
+    <div id="track-list">
+      <div class="audio-track playing" onclick="playTrack(this,'Neon Threshold','4:22')">
+        <div class="track-num">♪</div>
+        <div class="track-play">▶</div>
+        <div class="track-info"><h4>Neon Threshold</h4><p>Intro</p></div>
+        <div class="track-dur">4:22</div>
+      </div>
+      <div class="audio-track" onclick="playTrack(this,'Glass Horizon','3:58')">
+        <div class="track-num">2</div>
+        <div class="track-play">▶</div>
+        <div class="track-info"><h4>Glass Horizon</h4><p>Electronic</p></div>
+        <div class="track-dur">3:58</div>
+      </div>
+      <div class="audio-track" onclick="playTrack(this,'Prism Theory','5:11')">
+        <div class="track-num">3</div>
+        <div class="track-play">▶</div>
+        <div class="track-info"><h4>Prism Theory</h4><p>Ambient Electronic</p></div>
+        <div class="track-dur">5:11</div>
+      </div>
+      <div class="audio-track" onclick="playTrack(this,'Volta','4:07')">
+        <div class="track-num">4</div>
+        <div class="track-play">▶</div>
+        <div class="track-info"><h4>Volta</h4><p>Synthwave</p></div>
+        <div class="track-dur">4:07</div>
+      </div>
+      <div class="audio-track" onclick="playTrack(this,'City Membrane','6:24')">
+        <div class="track-num">5</div>
+        <div class="track-play">▶</div>
+        <div class="track-info"><h4>City Membrane</h4><p>Deep Electronic</p></div>
+        <div class="track-dur">6:24</div>
+      </div>
+      <div class="audio-track" onclick="playTrack(this,'Afterglow Protocol','4:55')">
+        <div class="track-num">6</div>
+        <div class="track-play">▶</div>
+        <div class="track-info"><h4>Afterglow Protocol</h4><p>Electronic</p></div>
+        <div class="track-dur">4:55</div>
+      </div>
+      <div class="audio-track" onclick="playTrack(this,'Ether Shift','3:39')">
+        <div class="track-num">7</div>
+        <div class="track-play">▶</div>
+        <div class="track-info"><h4>Ether Shift</h4><p>Minimal Techno</p></div>
+        <div class="track-dur">3:39</div>
+      </div>
+      <div class="audio-track" onclick="playTrack(this,'Signal Loss','5:48')">
+        <div class="track-num">8</div>
+        <div class="track-play">▶</div>
+        <div class="track-info"><h4>Signal Loss</h4><p>Atmospheric</p></div>
+        <div class="track-dur">5:48</div>
+      </div>
+    </div>
+  </div>
+  <footer><p>© 2025 Lumis Studio</p></footer>
+</div>
+
+<!-- ═══ ARTISTS PAGE ═══ -->
+<div id="page-artists" class="page">
+  <div class="section">
+    <a class="back-btn" onclick="goTo('home')">← Back</a>
+    <div class="eyebrow">Our Roster</div>
+    <h2 class="section-title">Featured <em>Artists</em></h2>
+    <div class="grid-4" style="margin-top:40px;">
+      <div class="glass artist-card">
+        <div class="artist-avatar" style="background:linear-gradient(135deg,#1a0a2e,#3d1f6e)">🎤</div>
+        <h3>Aria Voss</h3>
+        <p>Vocalist · Songwriter</p>
+        <div class="artist-genres"><span class="tag">Soul</span><span class="tag">R&amp;B</span></div>
+      </div>
+      <div class="glass artist-card">
+        <div class="artist-avatar" style="background:linear-gradient(135deg,#0a2a1a,#1a6e3d)">🎸</div>
+        <h3>The Parallels</h3>
+        <p>Indie Rock Band</p>
+        <div class="artist-genres"><span class="tag">Indie</span><span class="tag">Rock</span></div>
+      </div>
+      <div class="glass artist-card">
+        <div class="artist-avatar" style="background:linear-gradient(135deg,#2a0a0a,#6e1f1f)">🎹</div>
+        <h3>Milo Sanz</h3>
+        <p>Composer · Pianist</p>
+        <div class="artist-genres"><span class="tag">Classical</span><span class="tag">Neo-soul</span></div>
+      </div>
+      <div class="glass artist-card">
+        <div class="artist-avatar" style="background:linear-gradient(135deg,#0a1a2a,#1f3d6e)">🎧</div>
+        <h3>FLUX</h3>
+        <p>Electronic Producer</p>
+        <div class="artist-genres"><span class="tag">Techno</span><span class="tag">Ambient</span></div>
+      </div>
+      <div class="glass artist-card">
+        <div class="artist-avatar" style="background:linear-gradient(135deg,#1a1a0a,#6e6e1f)">🪗</div>
+        <h3>Selene Kai</h3>
+        <p>Multi-instrumentalist</p>
+        <div class="artist-genres"><span class="tag">Folk</span><span class="tag">World</span></div>
+      </div>
+      <div class="glass artist-card">
+        <div class="artist-avatar" style="background:linear-gradient(135deg,#1a0a1a,#6e1f6e)">🎺</div>
+        <h3>Damien Osei</h3>
+        <p>Jazz Trumpeter</p>
+        <div class="artist-genres"><span class="tag">Jazz</span><span class="tag">Fusion</span></div>
+      </div>
+      <div class="glass artist-card">
+        <div class="artist-avatar" style="background:linear-gradient(135deg,#0a1a1a,#1f6e6e)">🥁</div>
+        <h3>Nova Collective</h3>
+        <p>Experimental Ensemble</p>
+        <div class="artist-genres"><span class="tag">Avant-garde</span></div>
+      </div>
+      <div class="glass artist-card">
+        <div class="artist-avatar" style="background:linear-gradient(135deg,#1a0f0a,#6e3f1f)">🎻</div>
+        <h3>Lena Strand</h3>
+        <p>Violinist · Arranger</p>
+        <div class="artist-genres"><span class="tag">Classical</span><span class="tag">Film</span></div>
+      </div>
+    </div>
+  </div>
+  <footer><p>© 2025 Lumis Studio</p></footer>
+</div>
+
+<!-- ═══ TEAM PAGE ═══ -->
+<div id="page-team" class="page">
+  <div class="section">
+    <a class="back-btn" onclick="goTo('home')">← Back</a>
+    <div class="eyebrow">The People Behind the Work</div>
+    <h2 class="section-title">Meet the <em>Team</em></h2>
+    <p style="font-size:15px;color:var(--text-secondary);max-width:540px;line-height:1.7;margin-bottom:56px;">Every frame, every note, and every edit is shaped by the collective expertise of our crew. We are cinematographers, sound designers, editors, and storytellers — united by a single obsession: craft.</p>
+
+    <!-- Leadership row -->
+    <div style="font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent2);margin-bottom:24px;">Leadership</div>
+    <div class="grid-3" style="gap:24px;margin-bottom:56px;">
+
+      <div class="glass" style="padding:0;overflow:hidden;border-radius:18px;transition:transform .3s;" onmouseenter="this.style.transform='translateY(-6px)'" onmouseleave="this.style.transform='translateY(0)'">
+        <div style="aspect-ratio:4/3;background:linear-gradient(135deg,#12091f,#2d1a5e);display:flex;align-items:center;justify-content:center;font-size:72px;position:relative;">
+          🎬
+          <div style="position:absolute;bottom:14px;right:14px;display:flex;gap:6px;">
+            <span class="tag">Director</span>
+          </div>
+        </div>
+        <div style="padding:24px;">
+          <h3 style="font-size:18px;font-weight:500;margin-bottom:4px;">Marcus Veil</h3>
+          <p style="font-size:13px;color:var(--accent);margin-bottom:14px;letter-spacing:.04em;">Founder &amp; Creative Director</p>
+          <p style="font-size:14px;color:var(--text-secondary);line-height:1.7;margin-bottom:18px;">Former documentary cinematographer with credits across three continents. Marcus founded Lumis in 2013 with a belief that commercial work and artistic integrity are not in conflict.</p>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <span class="tag">Cinematography</span>
+            <span class="tag">Direction</span>
+            <span class="tag">Strategy</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="glass" style="padding:0;overflow:hidden;border-radius:18px;transition:transform .3s;" onmouseenter="this.style.transform='translateY(-6px)'" onmouseleave="this.style.transform='translateY(0)'">
+        <div style="aspect-ratio:4/3;background:linear-gradient(135deg,#091a12,#1a5e2d);display:flex;align-items:center;justify-content:center;font-size:72px;position:relative;">
+          🎵
+          <div style="position:absolute;bottom:14px;right:14px;">
+            <span class="tag">Music</span>
+          </div>
+        </div>
+        <div style="padding:24px;">
+          <h3 style="font-size:18px;font-weight:500;margin-bottom:4px;">Nadia Chen</h3>
+          <p style="font-size:13px;color:var(--accent);margin-bottom:14px;letter-spacing:.04em;">Head of Music Production</p>
+          <p style="font-size:14px;color:var(--text-secondary);line-height:1.7;margin-bottom:18px;">Grammy-nominated producer and multi-instrumentalist. Nadia leads all audio and music composition work, bringing a rigorous ear to every project — from a 30-second ad to a feature-length score.</p>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <span class="tag">Composition</span>
+            <span class="tag">Mixing</span>
+            <span class="tag">Mastering</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="glass" style="padding:0;overflow:hidden;border-radius:18px;transition:transform .3s;" onmouseenter="this.style.transform='translateY(-6px)'" onmouseleave="this.style.transform='translateY(0)'">
+        <div style="aspect-ratio:4/3;background:linear-gradient(135deg,#1a0909,#5e1a1a);display:flex;align-items:center;justify-content:center;font-size:72px;position:relative;">
+          📸
+          <div style="position:absolute;bottom:14px;right:14px;">
+            <span class="tag">Photography</span>
+          </div>
+        </div>
+        <div style="padding:24px;">
+          <h3 style="font-size:18px;font-weight:500;margin-bottom:4px;">Elara Moss</h3>
+          <p style="font-size:13px;color:var(--accent);margin-bottom:14px;letter-spacing:.04em;">Director of Photography</p>
+          <p style="font-size:14px;color:var(--text-secondary);line-height:1.7;margin-bottom:18px;">With a background in fine-art photography and editorial work for international publications, Elara shapes the visual language of every shoot — from intimate portraits to wide-scale commercial campaigns.</p>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <span class="tag">Photography</span>
+            <span class="tag">Lighting</span>
+            <span class="tag">Art Direction</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Core team -->
+    <div style="font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent2);margin-bottom:24px;">Core Crew</div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:56px;">
+
+      <div class="glass" style="padding:24px;border-radius:16px;transition:transform .3s;cursor:default;" onmouseenter="this.style.transform='translateY(-4px)'" onmouseleave="this.style.transform='translateY(0)'">
+        <div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#0d0d22,#1e1e6e);display:flex;align-items:center;justify-content:center;font-size:26px;margin-bottom:16px;">✂️</div>
+        <h3 style="font-size:15px;font-weight:500;margin-bottom:4px;">Joel Rivera</h3>
+        <p style="font-size:12px;color:var(--accent);margin-bottom:10px;">Lead Editor</p>
+        <p style="font-size:13px;color:var(--text-secondary);line-height:1.6;">Narrative pacing and colour grading specialist. 8 years cutting documentary and commercial content.</p>
+        <div style="margin-top:12px;display:flex;gap:6px;flex-wrap:wrap;">
+          <span class="tag">Premiere</span><span class="tag">DaVinci</span>
+        </div>
+      </div>
+
+      <div class="glass" style="padding:24px;border-radius:16px;transition:transform .3s;cursor:default;" onmouseenter="this.style.transform='translateY(-4px)'" onmouseleave="this.style.transform='translateY(0)'">
+        <div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#0a1f12,#1f6e3d);display:flex;align-items:center;justify-content:center;font-size:26px;margin-bottom:16px;">🎙️</div>
+        <h3 style="font-size:15px;font-weight:500;margin-bottom:4px;">Sora Kimura</h3>
+        <p style="font-size:12px;color:var(--accent);margin-bottom:10px;">Audio Engineer</p>
+        <p style="font-size:13px;color:var(--text-secondary);line-height:1.6;">Trained at Abbey Road Studios. Oversees all studio recording, ADR, and broadcast-ready sound delivery.</p>
+        <div style="margin-top:12px;display:flex;gap:6px;flex-wrap:wrap;">
+          <span class="tag">Pro Tools</span><span class="tag">Logic</span>
+        </div>
+      </div>
+
+      <div class="glass" style="padding:24px;border-radius:16px;transition:transform .3s;cursor:default;" onmouseenter="this.style.transform='translateY(-4px)'" onmouseleave="this.style.transform='translateY(0)'">
+        <div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#1f0a1a,#6e1f5e);display:flex;align-items:center;justify-content:center;font-size:26px;margin-bottom:16px;">🎨</div>
+        <h3 style="font-size:15px;font-weight:500;margin-bottom:4px;">Camille Durand</h3>
+        <p style="font-size:12px;color:var(--accent);margin-bottom:10px;">Motion Designer</p>
+        <p style="font-size:13px;color:var(--text-secondary);line-height:1.6;">Creates motion graphics, title sequences, and visual effects that tie every production together seamlessly.</p>
+        <div style="margin-top:12px;display:flex;gap:6px;flex-wrap:wrap;">
+          <span class="tag">After Effects</span><span class="tag">C4D</span>
+        </div>
+      </div>
+
+      <div class="glass" style="padding:24px;border-radius:16px;transition:transform .3s;cursor:default;" onmouseenter="this.style.transform='translateY(-4px)'" onmouseleave="this.style.transform='translateY(0)'">
+        <div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#1f1a0a,#6e5e1f);display:flex;align-items:center;justify-content:center;font-size:26px;margin-bottom:16px;">🚁</div>
+        <h3 style="font-size:15px;font-weight:500;margin-bottom:4px;">Theo Banks</h3>
+        <p style="font-size:12px;color:var(--accent);margin-bottom:10px;">Drone &amp; Camera Op</p>
+        <p style="font-size:13px;color:var(--text-secondary);line-height:1.6;">FAA-certified drone pilot and camera operator. Specialises in aerial cinematography and complex rig work.</p>
+        <div style="margin-top:12px;display:flex;gap:6px;flex-wrap:wrap;">
+          <span class="tag">DJI Inspire</span><span class="tag">ARRI</span>
+        </div>
+      </div>
+
+      <div class="glass" style="padding:24px;border-radius:16px;transition:transform .3s;cursor:default;" onmouseenter="this.style.transform='translateY(-4px)'" onmouseleave="this.style.transform='translateY(0)'">
+        <div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#0a1a1f,#1f5e6e);display:flex;align-items:center;justify-content:center;font-size:26px;margin-bottom:16px;">💡</div>
+        <h3 style="font-size:15px;font-weight:500;margin-bottom:4px;">Priya Anand</h3>
+        <p style="font-size:12px;color:var(--accent);margin-bottom:10px;">Gaffer &amp; Lighting</p>
+        <p style="font-size:13px;color:var(--text-secondary);line-height:1.6;">Masters of natural and studio light. Priya designs every lighting scheme to serve the mood of the story, not just the exposure.</p>
+        <div style="margin-top:12px;display:flex;gap:6px;flex-wrap:wrap;">
+          <span class="tag">Lighting</span><span class="tag">Grip</span>
+        </div>
+      </div>
+
+      <div class="glass" style="padding:24px;border-radius:16px;transition:transform .3s;cursor:default;" onmouseenter="this.style.transform='translateY(-4px)'" onmouseleave="this.style.transform='translateY(0)'">
+        <div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#1f0a0a,#6e1f1f);display:flex;align-items:center;justify-content:center;font-size:26px;margin-bottom:16px;">📋</div>
+        <h3 style="font-size:15px;font-weight:500;margin-bottom:4px;">Ana Costa</h3>
+        <p style="font-size:12px;color:var(--accent);margin-bottom:10px;">Producer</p>
+        <p style="font-size:13px;color:var(--text-secondary);line-height:1.6;">Keeps every production on time, on budget, and on brief. Ana manages logistics, talent, and client relationships across all active projects.</p>
+        <div style="margin-top:12px;display:flex;gap:6px;flex-wrap:wrap;">
+          <span class="tag">Production</span><span class="tag">Budgeting</span>
+        </div>
+      </div>
+
+      <div class="glass" style="padding:24px;border-radius:16px;transition:transform .3s;cursor:default;" onmouseenter="this.style.transform='translateY(-4px)'" onmouseleave="this.style.transform='translateY(0)'">
+        <div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#0f0a1f,#3d1f6e);display:flex;align-items:center;justify-content:center;font-size:26px;margin-bottom:16px;">🔊</div>
+        <h3 style="font-size:15px;font-weight:500;margin-bottom:4px;">Dani Ortiz</h3>
+        <p style="font-size:12px;color:var(--accent);margin-bottom:10px;">Sound Recordist</p>
+        <p style="font-size:13px;color:var(--text-secondary);line-height:1.6;">On-set audio capture specialist. Dani's work ensures clean, broadcast-quality location sound under any conditions.</p>
+        <div style="margin-top:12px;display:flex;gap:6px;flex-wrap:wrap;">
+          <span class="tag">Location Sound</span>
+        </div>
+      </div>
+
+      <div class="glass" style="padding:24px;border-radius:16px;transition:transform .3s;cursor:default;" onmouseenter="this.style.transform='translateY(-4px)'" onmouseleave="this.style.transform='translateY(0)'">
+        <div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#0a1f0a,#1f6e1f);display:flex;align-items:center;justify-content:center;font-size:26px;margin-bottom:16px;">🌐</div>
+        <h3 style="font-size:15px;font-weight:500;margin-bottom:4px;">Liang Wei</h3>
+        <p style="font-size:12px;color:var(--accent);margin-bottom:10px;">Digital Strategist</p>
+        <p style="font-size:13px;color:var(--text-secondary);line-height:1.6;">Bridges the gap between production and distribution. Liang ensures content performs across every platform and reaches its intended audience.</p>
+        <div style="margin-top:12px;display:flex;gap:6px;flex-wrap:wrap;">
+          <span class="tag">Digital</span><span class="tag">Distribution</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Culture banner -->
+    <div class="glass" style="padding:48px;border-radius:20px;display:flex;gap:40px;align-items:center;flex-wrap:wrap;">
+      <div style="flex:1;min-width:260px;">
+        <div class="eyebrow" style="margin-bottom:12px;">Our Culture</div>
+        <h3 style="font-family:'Playfair Display',serif;font-size:28px;font-weight:400;line-height:1.3;margin-bottom:16px;">We build each other <em style="color:var(--accent)">up</em></h3>
+        <p style="font-size:14px;color:var(--text-secondary);line-height:1.7;">Lumis is a studio where every voice in the room contributes. We invest in continuous learning, share creative authorship, and maintain a culture of respectful candour. The best idea wins — regardless of title or tenure.</p>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;flex-shrink:0;">
+        <div style="text-align:center;padding:20px 16px;background:rgba(200,169,126,0.07);border-radius:12px;border:0.5px solid rgba(200,169,126,0.2);">
+          <div style="font-family:'Playfair Display',serif;font-size:32px;color:var(--accent);margin-bottom:4px;">11</div>
+          <div style="font-size:12px;color:var(--text-secondary);text-transform:uppercase;letter-spacing:.08em;">Full-time crew</div>
+        </div>
+        <div style="text-align:center;padding:20px 16px;background:rgba(126,200,200,0.07);border-radius:12px;border:0.5px solid rgba(126,200,200,0.2);">
+          <div style="font-family:'Playfair Display',serif;font-size:32px;color:var(--accent2);margin-bottom:4px;">30+</div>
+          <div style="font-size:12px;color:var(--text-secondary);text-transform:uppercase;letter-spacing:.08em;">Freelance network</div>
+        </div>
+        <div style="text-align:center;padding:20px 16px;background:rgba(200,169,126,0.07);border-radius:12px;border:0.5px solid rgba(200,169,126,0.2);">
+          <div style="font-family:'Playfair Display',serif;font-size:32px;color:var(--accent);margin-bottom:4px;">8</div>
+          <div style="font-size:12px;color:var(--text-secondary);text-transform:uppercase;letter-spacing:.08em;">Nationalities</div>
+        </div>
+        <div style="text-align:center;padding:20px 16px;background:rgba(126,200,200,0.07);border-radius:12px;border:0.5px solid rgba(126,200,200,0.2);">
+          <div style="font-family:'Playfair Display',serif;font-size:32px;color:var(--accent2);margin-bottom:4px;">4</div>
+          <div style="font-size:12px;color:var(--text-secondary);text-transform:uppercase;letter-spacing:.08em;">Languages spoken</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:32px;text-align:center;">
+      <p style="font-size:15px;color:var(--text-secondary);margin-bottom:20px;">Interested in joining the Lumis team?</p>
+      <button class="btn btn-primary" onclick="goTo('contact')">Get in Touch →</button>
+    </div>
+  </div>
+  <footer><p>© 2025 Lumis Studio</p></footer>
+</div>
+
+<!-- ═══ CONTACT PAGE ═══ -->
+<div id="page-contact" class="page">
+  <div class="section">
+    <a class="back-btn" onclick="goTo('home')">← Back</a>
+    <div class="eyebrow">Get in Touch</div>
+    <h2 class="section-title">Let's <em>Create</em> Together</h2>
+    <div class="grid-2" style="margin-top:48px;gap:48px;align-items:start;">
+      <div>
+        <div class="glass" style="padding:32px;">
+          <div class="form-group">
+            <label>Your Name</label>
+            <input type="text" placeholder="Marcus Veil">
+          </div>
+          <div class="form-group">
+            <label>Email Address</label>
+            <input type="email" placeholder="hello@yourstudio.com">
+          </div>
+          <div class="form-group">
+            <label>Project Type</label>
+            <select>
+              <option>Video Production</option>
+              <option>Photography</option>
+              <option>Music Production</option>
+              <option>Audio Engineering</option>
+              <option>Visual Direction</option>
+              <option>Live Streaming</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Budget Range</label>
+            <select>
+              <option>Under $1,000</option>
+              <option>$1,000 – $5,000</option>
+              <option>$5,000 – $15,000</option>
+              <option>$15,000+</option>
+              <option>Let's discuss</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Tell us about your project</label>
+            <textarea placeholder="Describe your vision, timeline, and any specific requirements..."></textarea>
+          </div>
+          <button class="btn btn-primary" style="width:100%;justify-content:center;padding:14px;">Send Message →</button>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:20px;">
+        <div class="glass" style="padding:28px;">
+          <div style="font-size:24px;margin-bottom:12px;">📍</div>
+          <h3 style="font-size:14px;font-weight:500;margin-bottom:6px;">Studio Location</h3>
+          <p style="font-size:14px;color:var(--text-secondary);line-height:1.6;">Lumis Studio<br>Block 5, Creative District<br>Phnom Penh, Cambodia 12308</p>
+        </div>
+        <div class="glass" style="padding:28px;">
+          <div style="font-size:24px;margin-bottom:12px;">✉️</div>
+          <h3 style="font-size:14px;font-weight:500;margin-bottom:6px;">Email</h3>
+          <p style="font-size:14px;color:var(--accent);">hello@lumisstudio.com</p>
+          <p style="font-size:14px;color:var(--accent);">bookings@lumisstudio.com</p>
+        </div>
+        <div class="glass" style="padding:28px;">
+          <div style="font-size:24px;margin-bottom:12px;">📞</div>
+          <h3 style="font-size:14px;font-weight:500;margin-bottom:6px;">Phone</h3>
+          <p style="font-size:14px;color:var(--text-secondary);">+855 23 456 789</p>
+          <p style="font-size:13px;color:var(--text-muted);margin-top:4px;">Mon–Fri · 9am–6pm (ICT)</p>
+        </div>
+        <div class="glass" style="padding:28px;">
+          <div style="font-size:24px;margin-bottom:12px;">🌐</div>
+          <h3 style="font-size:14px;font-weight:500;margin-bottom:12px;">Follow Our Work</h3>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;">
+            <span class="tag">Instagram</span>
+            <span class="tag">YouTube</span>
+            <span class="tag">Vimeo</span>
+            <span class="tag">Spotify</span>
+            <span class="tag">SoundCloud</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <footer><p>© 2025 Lumis Studio</p></footer>
+</div>
+
+<!-- ═══ TEAM PAGE ═══ -->
+<div id="page-team" class="page">
+  <div class="section">
+    <a class="back-btn" onclick="goTo('home')">← Back</a>
+    <div class="eyebrow">The People Behind the Work</div>
+    <h2 class="section-title">Meet the <em>Team</em></h2>
+    <p style="font-size:15px;color:var(--text-secondary);max-width:540px;line-height:1.7;margin-bottom:48px;">Every frame, note, and image is the result of a dedicated creative collective. Specialists in their disciplines, unified by a shared obsession with craft.</p>
+
+    <!-- Core team grid -->
+    <div class="grid-4" style="gap:20px;margin-bottom:64px;">
+
+      <div class="glass team-card">
+        <div class="team-avatar-wrap">
+          <div class="team-avatar-bg" style="background:linear-gradient(160deg,#1a0a2e,#3d1f6e,#0d1a3d)"></div>
+          <div class="team-avatar-emoji">🎬</div>
+          <div class="team-avatar-overlay">
+            <p style="font-size:12px;color:rgba(255,255,255,.75);line-height:1.5;">"Every shot is a decision about what to include — and what to leave out."</p>
+          </div>
+        </div>
+        <div class="team-info">
+          <h3>Marcus Veil</h3>
+          <div class="role">Founder · Director</div>
+          <p>Cinematographer and composer with 12+ years across documentary, commercial, and narrative film.</p>
+          <div class="team-socials">
+            <a title="Instagram">ig</a>
+            <a title="LinkedIn">in</a>
+            <a title="Vimeo">vi</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="glass team-card">
+        <div class="team-avatar-wrap">
+          <div class="team-avatar-bg" style="background:linear-gradient(160deg,#0a2a1a,#1a6e3d,#0a2a0a)"></div>
+          <div class="team-avatar-emoji">📸</div>
+          <div class="team-avatar-overlay">
+            <p style="font-size:12px;color:rgba(255,255,255,.75);line-height:1.5;">"Light is the only medium I've never grown tired of studying."</p>
+          </div>
+        </div>
+        <div class="team-info">
+          <h3>Suki Tanaka</h3>
+          <div class="role">Lead Photographer</div>
+          <p>Editorial and commercial photographer. Published in Vogue Asia, Monocle, and National Geographic.</p>
+          <div class="team-socials">
+            <a title="Instagram">ig</a>
+            <a title="Portfolio">pf</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="glass team-card">
+        <div class="team-avatar-wrap">
+          <div class="team-avatar-bg" style="background:linear-gradient(160deg,#2a0a0a,#6e1f1f,#2a1000)"></div>
+          <div class="team-avatar-emoji">🎵</div>
+          <div class="team-avatar-overlay">
+            <p style="font-size:12px;color:rgba(255,255,255,.75);line-height:1.5;">"Sound is emotion in its most direct form."</p>
+          </div>
+        </div>
+        <div class="team-info">
+          <h3>Damien Osei</h3>
+          <div class="role">Music Producer</div>
+          <p>Grammy-nominated producer. Specialises in cinematic scoring, jazz fusion, and electronic composition.</p>
+          <div class="team-socials">
+            <a title="SoundCloud">sc</a>
+            <a title="Spotify">sp</a>
+            <a title="Instagram">ig</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="glass team-card">
+        <div class="team-avatar-wrap">
+          <div class="team-avatar-bg" style="background:linear-gradient(160deg,#0a1a2a,#1f3d6e,#0a0a2a)"></div>
+          <div class="team-avatar-emoji">🎨</div>
+          <div class="team-avatar-overlay">
+            <p style="font-size:12px;color:rgba(255,255,255,.75);line-height:1.5;">"Design is how we tell people what matters and why."</p>
+          </div>
+        </div>
+        <div class="team-info">
+          <h3>Léa Moreau</h3>
+          <div class="role">Creative Director</div>
+          <p>Visual identity strategist and art director. Background in fashion and brand campaigns across Europe and Asia.</p>
+          <div class="team-socials">
+            <a title="Instagram">ig</a>
+            <a title="Behance">be</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="glass team-card">
+        <div class="team-avatar-wrap">
+          <div class="team-avatar-bg" style="background:linear-gradient(160deg,#1a1a0a,#6e6e1f,#2a1a00)"></div>
+          <div class="team-avatar-emoji">🖥️</div>
+          <div class="team-avatar-overlay">
+            <p style="font-size:12px;color:rgba(255,255,255,.75);line-height:1.5;">"The edit is where the story is really written."</p>
+          </div>
+        </div>
+        <div class="team-info">
+          <h3>Ravi Menon</h3>
+          <div class="role">Senior Editor · Colorist</div>
+          <p>Post-production specialist. DaVinci Resolve certified with expertise in HDR mastering and VFX compositing.</p>
+          <div class="team-socials">
+            <a title="LinkedIn">in</a>
+            <a title="Vimeo">vi</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="glass team-card">
+        <div class="team-avatar-wrap">
+          <div class="team-avatar-bg" style="background:linear-gradient(160deg,#1a0a1a,#6e1f6e,#0d0a1a)"></div>
+          <div class="team-avatar-emoji">🎙️</div>
+          <div class="team-avatar-overlay">
+            <p style="font-size:12px;color:rgba(255,255,255,.75);line-height:1.5;">"Great audio is invisible — you feel it, not hear it."</p>
+          </div>
+        </div>
+        <div class="team-info">
+          <h3>Yuki Sato</h3>
+          <div class="role">Audio Engineer</div>
+          <p>Studio recording and live sound engineer. 8 years experience in broadcast audio and spatial sound design.</p>
+          <div class="team-socials">
+            <a title="SoundCloud">sc</a>
+            <a title="LinkedIn">in</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="glass team-card">
+        <div class="team-avatar-wrap">
+          <div class="team-avatar-bg" style="background:linear-gradient(160deg,#0a1a1a,#1f6e6e,#001a1a)"></div>
+          <div class="team-avatar-emoji">📡</div>
+          <div class="team-avatar-overlay">
+            <p style="font-size:12px;color:rgba(255,255,255,.75);line-height:1.5;">"Live production is jazz — planned spontaneity."</p>
+          </div>
+        </div>
+        <div class="team-info">
+          <h3>Carlos Reyes</h3>
+          <div class="role">Live Production Lead</div>
+          <p>Multi-camera operator and streaming tech lead. Manages live events from small concerts to stadium broadcasts.</p>
+          <div class="team-socials">
+            <a title="Instagram">ig</a>
+            <a title="LinkedIn">in</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="glass team-card">
+        <div class="team-avatar-wrap">
+          <div class="team-avatar-bg" style="background:linear-gradient(160deg,#1a0f0a,#6e3f1f,#1a0a00)"></div>
+          <div class="team-avatar-emoji">📋</div>
+          <div class="team-avatar-overlay">
+            <p style="font-size:12px;color:rgba(255,255,255,.75);line-height:1.5;">"Making creativity possible means removing every barrier to it."</p>
+          </div>
+        </div>
+        <div class="team-info">
+          <h3>Amara Diallo</h3>
+          <div class="role">Producer · Project Manager</div>
+          <p>Keeps every project on time, on budget, and on brief. 9 years producing content across 4 continents.</p>
+          <div class="team-socials">
+            <a title="LinkedIn">in</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Divider -->
+    <hr class="divider">
+
+    <!-- How we work together -->
+    <div class="eyebrow" style="margin-top:56px;">Collaboration</div>
+    <h2 class="section-title" style="margin-bottom:36px;">How we <em>work together</em></h2>
+
+    <div class="grid-2" style="gap:48px;align-items:start;">
+      <div>
+        <div class="collab-item">
+          <div class="collab-icon">🧭</div>
+          <div>
+            <h3 style="font-size:15px;font-weight:500;margin-bottom:6px;">Discovery Sprint</h3>
+            <p style="font-size:14px;color:var(--text-secondary);line-height:1.7;">Every project begins with a shared discovery session where the full team aligns on goals, references, and creative direction. No silos, no briefings-by-proxy — everyone hears the vision firsthand.</p>
+          </div>
+        </div>
+        <div class="collab-item">
+          <div class="collab-icon">🛠️</div>
+          <div>
+            <h3 style="font-size:15px;font-weight:500;margin-bottom:6px;">Cross-Discipline Production</h3>
+            <p style="font-size:14px;color:var(--text-secondary);line-height:1.7;">Our photographers brief the editors. Our composers sit in on colour grading. This cross-pollination is deliberate — the best creative decisions happen at the intersection of disciplines.</p>
+          </div>
+        </div>
+        <div class="collab-item">
+          <div class="collab-icon">🔄</div>
+          <div>
+            <h3 style="font-size:15px;font-weight:500;margin-bottom:6px;">Iterative Review</h3>
+            <p style="font-size:14px;color:var(--text-secondary);line-height:1.7;">Two structured review cycles are built into every engagement. We present work-in-progress, gather focused feedback, and refine — no endless revision loops, no last-minute surprises.</p>
+          </div>
+        </div>
+        <div class="collab-item">
+          <div class="collab-icon">🚀</div>
+          <div>
+            <h3 style="font-size:15px;font-weight:500;margin-bottom:6px;">Delivery &amp; Handoff</h3>
+            <p style="font-size:14px;color:var(--text-secondary);line-height:1.7;">Final files are delivered with full technical documentation, format variants, and a 30-day post-delivery support window. We stay available until you're confident with what you have.</p>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:20px;">
+        <div class="glass" style="padding:32px;">
+          <div style="font-family:'Playfair Display',serif;font-size:22px;margin-bottom:16px;">Studio <em style="color:var(--accent)">Culture</em></div>
+          <p style="font-size:14px;color:var(--text-secondary);line-height:1.8;margin-bottom:16px;">We run a flat structure. There are no account managers between you and the people creating your work. The person you brief on day one is the person who delivers on the last day.</p>
+          <p style="font-size:14px;color:var(--text-secondary);line-height:1.8;">We take on a limited number of projects each quarter — intentionally. It means every client gets the full attention of the team, not the leftovers.</p>
+        </div>
+
+        <div class="glass" style="padding:28px;">
+          <div style="font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:16px;">Team by the numbers</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+            <div><div style="font-family:'Playfair Display',serif;font-size:36px;color:var(--accent);line-height:1;">8</div><div style="font-size:12px;color:var(--text-secondary);margin-top:4px;">Core members</div></div>
+            <div><div style="font-family:'Playfair Display',serif;font-size:36px;color:var(--accent);line-height:1;">6</div><div style="font-size:12px;color:var(--text-secondary);margin-top:4px;">Disciplines</div></div>
+            <div><div style="font-family:'Playfair Display',serif;font-size:36px;color:var(--accent2);line-height:1;">4</div><div style="font-size:12px;color:var(--text-secondary);margin-top:4px;">Countries represented</div></div>
+            <div><div style="font-family:'Playfair Display',serif;font-size:36px;color:var(--accent2);line-height:1;">5</div><div style="font-size:12px;color:var(--text-secondary);margin-top:4px;">Languages spoken</div></div>
+          </div>
+        </div>
+
+        <div class="glass" style="padding:24px;text-align:center;">
+          <div style="font-size:15px;font-weight:500;margin-bottom:8px;">Want to join the team?</div>
+          <p style="font-size:13px;color:var(--text-secondary);margin-bottom:16px;">We occasionally bring on freelance collaborators for specific projects.</p>
+          <button class="btn btn-primary" onclick="goTo('contact')">Get in Touch →</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <footer><p>© 2025 Lumis Studio</p></footer>
+</div>
+
+<script>
+  // ── Navigation ──
+  function goTo(page, param) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+    const el = document.getElementById('page-' + page);
+    if (el) {
+      el.classList.add('active');
+      window.scrollTo(0,0);
+    }
+    const navLink = document.querySelector('[data-page="' + page + '"]');
+    if (navLink) navLink.classList.add('active');
+
+    // Handle parameterised detail pages
+    if (page === 'photo-detail' && param) {
+      document.getElementById('photo-detail-title').textContent = param;
+      const emojis = {
+        'Mountain Solitude':'🏔️','Golden Hour':'🌅','Urban Geometry':'🏙️',
+        'Forest Mist':'🌲','Portrait Study I':'👤','Product Aura':'📦',
+        'Night Market':'🏮','Coastal Light':'🌊','Studio Session':'🎸',
+        'Cinematic Landscapes':'🏔️'
+      };
+      document.getElementById('photo-detail-emoji').textContent = emojis[param] || '🏔️';
+    }
+    if (page === 'video-detail' && param) {
+      document.getElementById('video-detail-title').textContent = param;
+      const emojis = {'Urban Pulse':'🏙️','Resonance':'🎵','Invisible Hours':'⌛','Earth & Air':'🌍'};
+      document.getElementById('video-detail-emoji').textContent = emojis[param] || '🎬';
+    }
+  }
+
+  // ── Audio player ──
+  let playing = true;
+  function togglePlay() {
+    playing = !playing;
+    document.getElementById('play-pause-btn').textContent = playing ? '⏸' : '▶';
+  }
+  function playTrack(el, title, dur) {
+    document.querySelectorAll('.audio-track').forEach((t,i) => {
+      t.classList.remove('playing');
+      t.querySelector('.track-num').textContent = i + 1;
+    });
+    el.classList.add('playing');
+    el.querySelector('.track-num').textContent = '♪';
+    document.getElementById('now-playing-title').textContent = title;
+    playing = true;
+    document.getElementById('play-pause-btn').textContent = '⏸';
+  }
+
+  // ── Photo filter (stub) ──
+  function filterPhotos(cat) {
+    // Visual feedback only — in a real app this would filter items
+    document.querySelectorAll('.photo-item').forEach(item => {
+      item.style.opacity = '0.4';
+      setTimeout(() => item.style.opacity = '1', 150);
+    });
+  }
+</script>
+</body>
+</html>
